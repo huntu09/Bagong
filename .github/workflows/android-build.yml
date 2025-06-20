@@ -30,11 +30,9 @@ jobs:
       run: |
         npm install --legacy-peer-deps
         
-    - name: Generate React Native Files
+    - name: Check React Native Config
       run: |
         npx react-native config
-        mkdir -p android/build/generated/autolinking
-        echo '{}' > android/build/generated/autolinking/autolinking.json
         
     - name: Fix Gradle Wrapper
       run: |
