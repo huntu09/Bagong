@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Writer Pro - Offline</title>
+  <link rel="icon" href="/favicon.ico">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    
+    .container {
+      text-align: center;
+      max-width: 500px;
+      width: 100%;
+    }
+    
+    .icon {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 2rem;
+      background: linear-gradient(135deg, #2563eb, #3b82f6);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #2563eb, #3b82f6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      opacity: 0.8;
+      margin-bottom: 2rem;
+    }
+    
+    .buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    button {
+      background: linear-gradient(135deg, #2563eb, #3b82f6);
+      color: white;
+      border: none;
+      padding: 0.875rem 2rem;
+      border-radius: 0.75rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      min-width: 140px;
+    }
+    
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+    }
+    
+    .secondary {
+      background: transparent;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      color: rgba(255, 255, 255, 0.8);
+    }
+    
+    .secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+    
+    .status {
+      margin-top: 2rem;
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 0.5rem;
+      border-left: 4px solid #ef4444;
+    }
+    
+    .status.online {
+      border-left-color: #10b981;
+    }
+    
+    @media (max-width: 640px) {
+      .container {
+        padding: 1rem;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      button {
+        width: 100%;
+        max-width: 280px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="icon">
+      📱
+    </div>
+    
+    <h1>AI Writer Pro</h1>
+    
+    <p>
+      Anda sedang offline. Beberapa fitur mungkin tidak tersedia sampai koneksi internet kembali.
+      Konten yang sudah disimpan masih bisa diakses.
+    </p>
+    
+    <div class="buttons">
+      <button onclick="window.location.reload()">
+        🔄 Coba Lagi
+      </button>
+      
+      <button class="secondary" onclick="goHome()">
+        🏠 Kembali ke Home
+      </button>
+    </div>
+    
+    <div class="status" id="status">
+      <strong>Status:</strong> <span id="connection-status">Offline</span>
+    </div>
+  </div>
+
+  <script>
+    function goHome() {
+      window.location.href = '/'
+    }
+    
+    function updateConnectionStatus() {
+      const status = document.getElementById('status')
+      const connectionStatus = document.getElementById('connection-status')
+      
+      if (navigator.onLine) {
+        status.classList.add('online')
+        connectionStatus.textContent = 'Online - Koneksi tersedia'
+        
+        // Auto reload when back online
+        setTimeout(() => {
+          window.location.reload()
+        }, 1000)
+      } else {
+        status.classList.remove('online')
+        connectionStatus.textContent = 'Offline - Tidak ada koneksi'
+      }
+    }
+    
+    // Check connection status
+    updateConnectionStatus()
+    
+    // Listen for connection changes
+    window.addEventListener('online', updateConnectionStatus)
+    window.addEventListener('offline', updateConnectionStatus)
+    
+    // Auto-retry connection every 30 seconds
+    setInterval(() => {
+      if (navigator.onLine) {
+        window.location.reload()
+      }
+    }, 30000)
+  </script>
+</body>
+</html>
