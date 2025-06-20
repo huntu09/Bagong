@@ -7,10 +7,25 @@ buildscript {
         ndkVersion = "25.1.8937393"
         kotlinVersion = "1.8.0"
     }
+
+    repositories {
+        google()
+        mavenCentral()
+        maven { url 'https://www.jitpack.io' } // penting kalau pakai library dari GitHub
+    }
+
     dependencies {
-        classpath("com.android.tools.build:gradle")
+        classpath("com.android.tools.build:gradle:8.2.0")
         classpath("com.facebook.react:react-native-gradle-plugin")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url 'https://www.jitpack.io' }
     }
 }
 
