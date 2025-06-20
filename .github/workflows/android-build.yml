@@ -1,10 +1,7 @@
-name: Android Build & Release
+name: Android Build
 
 on:
   push:
-    branches: [ main, develop ]
-    tags: [ 'v*' ]
-  pull_request:
     branches: [ main ]
 
 jobs:
@@ -19,7 +16,6 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '18'
-        # HAPUS cache: 'npm' karena tidak ada lock file
         
     - name: Setup Java JDK
       uses: actions/setup-java@v4
@@ -33,47 +29,20 @@ jobs:
     - name: Install dependencies
       run: npm install --legacy-peer-deps
       
-    - name: Create .env file
-      run: |
-        echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" > .env
-        
-    - name: Make gradlew executable
-      run: chmod +x android/gradlew
-      
-    - name: Clean build
+    - name: Fix Gradle Wrapper
       run: |
         cd android
-        ./gradlew clean
+        mkdir -p gradle/wrapper
+        curl -L -o gradle/wrapper/gradle-wrapper.jar https://github.com/gradle/gradle/raw/v8.6.0/gradle/wrapper/gradle-wrapper.jar
+        chmod +x gradlew
         
-    - name: Build Debug APK
+    - name: Build APK
       run: |
         cd android
-        ./gradlew assembleDebug
+        ./gradlew assembleDebug --no-daemon
         
-    - name: Build Release APK
-      run: |
-        cd android
-        ./gradlew assembleRelease
-      
-    - name: Build AAB
-      run: |
-        cd android
-        ./gradlew bundleRelease
-        
-    - name: Upload Debug APK
+    - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
-        name: app-debug-apk
+        name: app-debug
         path: android/app/build/outputs/apk/debug/app-debug.apk
-        
-    - name: Upload Release APK
-      uses: actions/upload-artifact@v4
-      with:
-        name: app-release-apk
-        path: android/app/build/outputs/apk/release/app-release.apk
-        
-    - name: Upload AAB
-      uses: actions/upload-artifact@v4
-      with:
-        name: app-release-aab
-        path: android/app/build/outputs/bundle/release/app-release.aab
