@@ -1,10 +1,7 @@
-name: Android Build & Release
+name: Android Build
 
 on:
   push:
-    branches: [ main, develop ]
-    tags: [ 'v*' ]
-  pull_request:
     branches: [ main ]
 
 jobs:
@@ -12,16 +9,14 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
+    - uses: actions/checkout@v4
+    
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '18'
-        cache: 'npm'
         
-    - name: Setup Java JDK
+    - name: Setup Java
       uses: actions/setup-java@v4
       with:
         distribution: 'temurin'
@@ -33,36 +28,16 @@ jobs:
     - name: Install dependencies
       run: npm install --legacy-peer-deps
       
-    - name: Create .env file
+    - name: Make gradlew executable
+      run: chmod +x android/gradlew
+      
+    - name: Build APK
       run: |
-        echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" > .env
+        cd android
+        ./gradlew assembleRelease --no-daemon
         
-    - name: Create keystores directory
-      run: mkdir -p android/app/keystores
-        
-    - name: Setup Keystore
-      run: |
-        echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/keystores/upload-keystore.keystore
-        
-    - name: Create gradle.properties
-      run: |
-        echo "MYAPP_UPLOAD_STORE_FILE=keystores/upload-keystore.keystore" >> android/gradle.properties
-        echo "MYAPP_UPLOAD_KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> android/gradle.properties
-        echo "MYAPP_UPLOAD_STORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}" >> android/gradle.properties
-        echo "MYAPP_UPLOAD_KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> android/gradle.properties
-        
-    - name: Build with React Native CLI
-      run: |
-        npx react-native build-android --mode=release
-        
-    - name: Upload APK Artifact
+    - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
-        name: app-release-apk
+        name: app-release
         path: android/app/build/outputs/apk/release/app-release.apk
-        
-    - name: Upload AAB Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: app-release-aab
-        path: android/app/build/outputs/bundle/release/app-release.aab
