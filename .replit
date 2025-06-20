@@ -1,3 +1,7 @@
 modules = ["nodejs-20"]
 [nix]
 packages = ["unzipNLS", "zulu8", "gradle_5"]
+
+[[ports]]
+localPort = 37317
+externalPort = 80
