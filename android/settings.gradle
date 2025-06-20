@@ -1,4 +1,16 @@
 rootProject.name = 'AIWriterPro'
-apply from: file("../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesSettingsGradle(settings)
+
 include ':app'
-includeBuild('../node_modules/@react-native/gradle-plugin')
+
+// Check if React Native CLI exists before applying
+def reactNativeCliPath = '../node_modules/@react-native-community/cli-platform-android/native_modules.gradle'
+if (file(reactNativeCliPath).exists()) {
+    apply from: file(reactNativeCliPath)
+    applyNativeModulesSettingsGradle(settings)
+}
+
+// Check for Gradle plugin
+def gradlePluginPath = '../node_modules/@react-native/gradle-plugin'
+if (file(gradlePluginPath).exists()) {
+    includeBuild(gradlePluginPath)
+}
