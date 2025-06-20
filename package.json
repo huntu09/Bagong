@@ -18,18 +18,17 @@
     "build:android:aab": "cd android && ./gradlew bundleRelease",
     "build:android:clean": "cd android && ./gradlew clean",
     "clean": "react-native clean-project-auto",
-    "postinstall": "cd ios && pod install",
-    "ci:setup": "chmod +x scripts/setup-github-secrets.sh && ./scripts/setup-github-secrets.sh"
+    "postinstall": "cd ios && pod install"
   },
   "dependencies": {
-    "next": "^14.0.0",
     "react": "18.2.0",
-    "react-dom": "^18.0.0",
+    "react-dom": "18.2.0",
     "react-native": "0.73.6",
+    "next": "^14.0.0",
     "typescript": "5.0.4",
     "@types/node": "^20.0.0",
     "@types/react": "^18.2.6",
-    "@types/react-dom": "^18.0.0",
+    "@types/react-dom": "^18.2.0",
     "ai": "^3.0.0",
     "@ai-sdk/openai": "^0.0.42",
     "isomorphic-dompurify": "^2.0.0",
@@ -88,15 +87,7 @@
     "react-native-progress": "^5.0.1",
     "react-native-super-grid": "^4.9.6",
     "uuid": "^9.0.1",
-    "date-fns": "^2.30.0",
-    "react-native-picker-select": "^8.1.0",
-    "react-native-slider": "^0.11.0",
-    "react-native-elements": "^3.4.3",
-    "react-native-ratings": "^8.1.0",
-    "react-native-chart-kit": "^6.12.0",
-    "react-native-svg": "^13.14.0",
-    "react-native-markdown-display": "^7.0.2",
-    "react-native-syntax-highlighter": "^2.1.0"
+    "date-fns": "^2.30.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
@@ -122,5 +113,9 @@
   "engines": {
     "node": ">=18",
     "npm": ">=8.0.0"
+  },
+  "overrides": {
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
   }
 }
