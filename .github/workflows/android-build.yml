@@ -56,12 +56,12 @@ jobs:
         echo "MYAPP_UPLOAD_STORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}" >> android/gradle.properties
         echo "MYAPP_UPLOAD_KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> android/gradle.properties
         
-    - name: Build APK with Gradle
+    - name: Build APK
       run: |
         cd android
         gradle assembleRelease
       
-    - name: Build AAB with Gradle
+    - name: Build AAB
       run: |
         cd android
         gradle bundleRelease
