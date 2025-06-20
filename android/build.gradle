@@ -11,12 +11,12 @@ buildscript {
     repositories {
         google()
         mavenCentral()
-        maven { url 'https://www.jitpack.io' } // penting kalau pakai library dari GitHub
+        maven { url 'https://www.jitpack.io' }
     }
 
     dependencies {
         classpath("com.android.tools.build:gradle:8.2.0")
-        classpath("com.facebook.react:react-native-gradle-plugin")
+        classpath("com.facebook.react:react-native-gradle-plugin:0.73.6") // <== INI FIXNYA!
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
     }
 }
