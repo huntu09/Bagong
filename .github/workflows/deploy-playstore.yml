@@ -1,0 +1,58 @@
+name: Deploy to Play Store
+
+on:
+  push:
+    tags: [ 'v*' ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Setup Java JDK
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Create .env file
+      run: |
+        echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" > .env
+        
+    - name: Setup Keystore
+      run: |
+        mkdir -p android/app/keystores
+        echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/keystores/upload-keystore.keystore
+        
+    - name: Create gradle.properties
+      run: |
+        echo "MYAPP_UPLOAD_STORE_FILE=keystores/upload-keystore.keystore" >> android/gradle.properties
+        echo "MYAPP_UPLOAD_KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> android/gradle.properties
+        echo "MYAPP_UPLOAD_STORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}" >> android/gradle.properties
+        echo "MYAPP_UPLOAD_KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> android/gradle.properties
+        
+    - name: Build AAB
+      run: |
+        chmod +x android/gradlew
+        cd android && ./gradlew bundleRelease
+        
+    - name: Upload to Play Store
+      uses: r0adkll/upload-google-play@v1
+      with:
+        serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT }}
+        packageName: com.aiwriterpro.app
+        releaseFiles: android/app/build/outputs/bundle/release/app-release.aab
+        track: production
+        status: completed
